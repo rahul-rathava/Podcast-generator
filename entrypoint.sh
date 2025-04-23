@@ -1,14 +1,15 @@
-#!/bin/bash
+FROM ubuntu:latest
 
-echo "============="
+RUN apt-get update && apt-get install -y \
+  python3.10 \
+  python3-pip \
+  git
 
-git config --global user.name "${GITHUB_ACTOR}"
-git config --global user.name "${INPUT_EMAIL}"
-git config --global --add safe.directory /github/workspace
+RUN pip3 install PyYAML
 
-python3 C:\Users\91757\code
+COPY feed.py /usr/bin/feed.py
+COPY entrypoint.sh /entrypoint.sh
 
-git add -A && git commit -m "update feed"
-git push --set-stream origin main
+RUN chmod +x /entrypoint.sh
 
-echo "============="
+ENTRYPOINT ["/entrypoint.sh"]
